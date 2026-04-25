@@ -46,9 +46,7 @@ function show_volume_notif {
 
 # Main function - Takes user input
 case $1 in
-    # Volume =============================================================
-    volume_up)
-    # Unmutes and increases volume, then displays the notification
+    up)
     pactl set-sink-mute @DEFAULT_SINK@ 0
     volume=$(get_volume)
     if [ $(( "$volume" + "$volume_step" )) -gt $max_volume ]; then
@@ -59,14 +57,12 @@ case $1 in
     show_volume_notif
     ;;
 
-    volume_down)
-    # Lowers volume and displays the notification
+    down)
     pactl set-sink-volume @DEFAULT_SINK@ -$volume_step%
     show_volume_notif
     ;;
 
-    volume_mute)
-    # Toggles mute and displays the notification
+    mute)
     pactl set-sink-mute @DEFAULT_SINK@ toggle
     show_volume_notif
     ;;
