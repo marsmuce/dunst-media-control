@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 volume_step=5
-max_volume=100
+max_volume=150
 notification_timeout=1000 # in milliseconds
 
 # Uses regex to get volume from pactl
@@ -19,9 +19,11 @@ function get_volume_icon {
     volume=$(get_volume)
     mute=$(get_mute)
     if [ "$volume" -eq 0 ] || [ "$mute" == "yes" ] ; then
-        volume_icon="🔇"
+        volume_icon=" "
     elif [ "$volume" -lt 50 ]; then
         volume_icon=" "
+    elif [ "$volume" -gt 50 -lt 101 ]; then
+        volume_icon=" "
     else
         volume_icon=" "
     fi 
@@ -31,17 +33,7 @@ function get_volume_icon {
 function show_volume_notif {
     volume=$(get_mute)
     get_volume_icon
-
-    if [[ $show_music_in_volume_indicator == "true" ]]; then
-        current_song=$(playerctl -f "{{title}} - {{artist}}" metadata)
-
-        if [[ $show_album_art == "true" ]]; then
-            get_album_art
-        fi
-        notify-send -t $notification_timeout -h string:x-dunst-stack-tag:volume_notif -h int:value:$volume -i "$album_art" "$volume_icon $volume%" "$current_song"
-    else
-        notify-send -t $notification_timeout -h string:x-dunst-stack-tag:volume_notif -h int:value:$volume "$volume_icon $volume%"
-    fi
+    notify-send -t $notification_timeout -h string:x-dunst-stack-tag:volume_notif -h int:value:$volume "$volume_icon $volume%"
 }
 
 # Main function - Takes user input
